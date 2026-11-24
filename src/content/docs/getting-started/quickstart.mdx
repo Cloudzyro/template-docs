@@ -1,0 +1,107 @@
+---
+title: Quickstart
+description: Send your first message with the Tidewire API in about five minutes.
+sidebar:
+  order: 2
+---
+
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+This guide takes you from a new account to a delivered message. You'll use a **test key**, so nothing is charged and no real phone receives anything.
+
+<Steps>
+
+1. **Create a test key.** In the dashboard, open **Developers**, then **API keys**, and choose **Create test key**. Test keys start with `tw_test_`.
+
+2. **Save it as an environment variable.** Never paste keys into your code.
+
+   ```bash
+   export TIDEWIRE_API_KEY="tw_test_..."
+   ```
+
+3. **Install a library** (or skip this and use cURL).
+
+   <Tabs syncKey="pkg">
+     <TabItem label="npm">
+       ```bash
+       npm install @tidewire/node
+       ```
+     </TabItem>
+     <TabItem label="pnpm">
+       ```bash
+       pnpm add @tidewire/node
+       ```
+     </TabItem>
+     <TabItem label="pip">
+       ```bash
+       pip install tidewire
+       ```
+     </TabItem>
+     <TabItem label="Go">
+       ```bash
+       go get github.com/tidewire/tidewire-go
+       ```
+     </TabItem>
+   </Tabs>
+
+4. **Send a message.**
+
+   <Tabs syncKey="lang">
+     <TabItem label="cURL">
+       ```bash
+       curl https://api.tidewire.example/v1/messages \
+         -H "Authorization: Bearer $TIDEWIRE_API_KEY" \
+         -H "Content-Type: application/json" \
+         -d '{"to": "+15550100", "body": "Hello from Tidewire"}'
+       ```
+     </TabItem>
+     <TabItem label="JavaScript">
+       ```js
+       import Tidewire from "@tidewire/node";
+
+       const tw = new Tidewire(process.env.TIDEWIRE_API_KEY);
+       const message = await tw.messages.create({
+         to: "+15550100",
+         body: "Hello from Tidewire",
+       });
+       console.log(message.id);
+       ```
+     </TabItem>
+     <TabItem label="Python">
+       ```python
+       import os
+       import tidewire
+
+       tw = tidewire.Client(os.environ["TIDEWIRE_API_KEY"])
+       message = tw.messages.create(to="+15550100", body="Hello from Tidewire")
+       print(message.id)
+       ```
+     </TabItem>
+     <TabItem label="Go">
+       ```go
+       client := tidewire.NewClient(os.Getenv("TIDEWIRE_API_KEY"))
+       msg, err := client.Messages.Create(ctx, &tidewire.MessageParams{
+           To:   "+15550100",
+           Body: "Hello from Tidewire",
+       })
+       if err != nil {
+           log.Fatal(err)
+       }
+       fmt.Println(msg.ID)
+       ```
+     </TabItem>
+   </Tabs>
+
+5. **Check the result.** You'll get `202 Accepted` with the new message. In test mode, the number `+15550100` always delivers within a second.
+
+</Steps>
+
+<Aside type="tip" title="Test numbers">
+  Use `+15550100` for a delivered message, `+15550101` for a failure and `+15550102` for a message that stays queued. They only work with test keys.
+</Aside>
+
+## Next steps
+
+- Learn how [authentication](/getting-started/authentication/) and live keys work
+- Get delivery updates with [webhooks](/guides/webhooks/)
+- Browse the full [Messages API](/api/messages/)

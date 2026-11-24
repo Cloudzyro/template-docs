@@ -1,0 +1,157 @@
+/* Tidewire theme: deep sea ink with aqua and coral. Change the colors here. */
+
+:root {
+  --sl-font: "Inter Variable", system-ui, sans-serif;
+  --sl-font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --tw-font-display: "Space Grotesk Variable", "Inter Variable", system-ui, sans-serif;
+  --tw-coral: #ff8a65;
+  /* Note callouts and badges use this hue: a deep sea blue instead of the default. */
+  --sl-hue-blue: 196;
+
+  /* Dark mode */
+  --sl-color-accent-low: hsl(172, 60%, 14%);
+  --sl-color-accent: hsl(169, 78%, 48%);
+  --sl-color-accent-high: hsl(167, 85%, 78%);
+  --sl-color-white: hsl(180, 30%, 98%);
+  --sl-color-gray-1: hsl(196, 22%, 90%);
+  --sl-color-gray-2: hsl(198, 14%, 76%);
+  --sl-color-gray-3: hsl(200, 10%, 58%);
+  --sl-color-gray-4: hsl(204, 14%, 36%);
+  --sl-color-gray-5: hsl(206, 24%, 20%);
+  --sl-color-gray-6: hsl(208, 34%, 11%);
+  --sl-color-black: hsl(210, 40%, 7%);
+  --sl-color-bg-nav: hsl(210, 40%, 7%);
+  --sl-color-bg-sidebar: hsl(210, 40%, 7%);
+  --sl-color-hairline: hsl(206, 26%, 15%);
+  --sl-color-hairline-light: hsl(206, 22%, 20%);
+}
+
+:root[data-theme="light"] {
+  --sl-color-accent-low: hsl(168, 70%, 90%);
+  --sl-color-accent: hsl(174, 85%, 27%);
+  --sl-color-accent-high: hsl(176, 80%, 20%);
+  --sl-color-white: hsl(208, 40%, 10%);
+  --sl-color-gray-1: hsl(208, 30%, 16%);
+  --sl-color-gray-2: hsl(206, 18%, 26%);
+  --sl-color-gray-3: hsl(204, 10%, 40%);
+  --sl-color-gray-4: hsl(200, 10%, 58%);
+  --sl-color-gray-5: hsl(190, 14%, 84%);
+  --sl-color-gray-6: hsl(180, 22%, 95%);
+  --sl-color-gray-7: hsl(170, 25%, 97.5%);
+  --sl-color-black: hsl(0, 0%, 100%);
+  --sl-color-bg-nav: hsl(0, 0%, 100%);
+  --sl-color-bg-sidebar: hsl(170, 25%, 97.5%);
+  --sl-color-hairline: hsl(190, 16%, 90%);
+  --sl-color-hairline-light: hsl(190, 14%, 86%);
+}
+
+/* Headings */
+.sl-markdown-content :is(h1, h2, h3, h4),
+h1#_top,
+.hero h1,
+.site-title {
+  font-family: var(--tw-font-display);
+  letter-spacing: -0.02em;
+}
+h1#_top {
+  font-weight: 700;
+}
+.site-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+/* Sidebar: pill highlight for the current page */
+nav.sidebar a[aria-current="page"],
+nav.sidebar a[aria-current="page"]:hover {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+nav.sidebar a {
+  border-radius: 0.5rem;
+}
+
+/* Cards */
+.card {
+  border-radius: 1rem !important;
+  border-color: var(--sl-color-hairline-light) !important;
+  background: color-mix(in srgb, var(--sl-color-gray-6) 55%, transparent) !important;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+  border-color: var(--sl-color-accent) !important;
+}
+.card .icon {
+  border-radius: 0.6rem;
+}
+
+/* Landing hero */
+[data-has-hero] .page {
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, color-mix(in srgb, var(--sl-color-accent) 18%, transparent), transparent 70%),
+    radial-gradient(40rem 24rem at -10% 10%, color-mix(in srgb, var(--tw-coral) 12%, transparent), transparent 70%);
+}
+.hero {
+  padding-block: 3rem 2rem;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.04;
+  font-weight: 700;
+}
+.hero .tagline {
+  font-size: 1.15rem;
+  max-width: 36rem;
+}
+.hero img {
+  filter: drop-shadow(0 24px 48px hsl(169 78% 30% / 0.25));
+}
+
+/* Endpoint labels used in the API reference */
+.endpoint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  border-radius: 0.75rem;
+  background: var(--sl-color-gray-6);
+  font-family: var(--sl-font-mono);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+.method {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.4rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.method.get {
+  background: hsl(205 80% 50% / 0.16);
+  color: hsl(205 85% 62%);
+}
+.method.post {
+  background: hsl(169 78% 45% / 0.16);
+  color: var(--sl-color-accent-high);
+}
+.method.delete {
+  background: hsl(8 85% 60% / 0.16);
+  color: hsl(8 85% 66%);
+}
+:root[data-theme="light"] .method.get {
+  color: hsl(205 85% 32%);
+}
+:root[data-theme="light"] .method.delete {
+  color: hsl(8 75% 40%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

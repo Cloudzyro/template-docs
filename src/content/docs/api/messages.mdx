@@ -1,0 +1,219 @@
+---
+title: Messages
+description: Create, retrieve, list and cancel messages with the Messages API.
+sidebar:
+  order: 2
+banner:
+  content: |
+    You're reading the reference for API version <strong>2026-10-01</strong>. <a href="/resources/versioning/">See what changed</a>.
+---
+
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+
+A message is a single text sent to one recipient. Its `status` moves from `queued` to `sent` to `delivered` (or `failed`).
+
+## The message object
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | string | Unique ID, starting with `msg_` |
+| `to` | string | Recipient in E.164 format |
+| `body` | string | The text that was sent |
+| `status` | string | `queued`, `scheduled`, `sent`, `delivered`, `failed` or `canceled` |
+| `parts` | integer | How many segments the body used |
+| `send_at` | string or null | Scheduled time, if any |
+| `created_at` | string | ISO 8601 timestamp |
+
+---
+
+## Create a message
+
+<div class="endpoint"><span class="method post">POST</span>/v1/messages</div>
+
+Sends a message now, or schedules it with `send_at`.
+
+### Body parameters
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `to` | string | Yes | Recipient phone number in E.164 format |
+| `body` | string | One of `body` or `template` | Up to 1,600 characters |
+| `template` | string | One of `body` or `template` | A template ID from the dashboard |
+| `variables` | object | No | Values for the template's placeholders |
+| `send_at` | string | No | ISO 8601 time, up to 30 days ahead |
+| `metadata` | object | No | Up to 20 keys of your own data, returned in webhooks |
+
+<Tabs syncKey="lang">
+  <TabItem label="cURL">
+    ```bash
+    curl https://api.tidewire.example/v1/messages \
+      -H "Authorization: Bearer $TIDEWIRE_API_KEY" \
+      -H "Content-Type: application/json" \
+      -H "Idempotency-Key: 6f1c2b7e-order-1042" \
+      -d '{
+        "to": "+15550100",
+        "body": "Your order #1042 is on its way.",
+        "metadata": { "order_id": "1042" }
+      }'
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```js
+    const message = await tw.messages.create(
+      {
+        to: "+15550100",
+        body: "Your order #1042 is on its way.",
+        metadata: { order_id: "1042" },
+      },
+      { idempotencyKey: "6f1c2b7e-order-1042" },
+    );
+    ```
+  </TabItem>
+  <TabItem label="Python">
+    ```python
+    message = tw.messages.create(
+        to="+15550100",
+        body="Your order #1042 is on its way.",
+        metadata={"order_id": "1042"},
+        idempotency_key="6f1c2b7e-order-1042",
+    )
+    ```
+  </TabItem>
+  <TabItem label="Go">
+    ```go
+    msg, err := client.Messages.Create(ctx, &tidewire.MessageParams{
+        To:       "+15550100",
+        Body:     "Your order #1042 is on its way.",
+        Metadata: map[string]string{"order_id": "1042"},
+    }, tidewire.WithIdempotencyKey("6f1c2b7e-order-1042"))
+    ```
+  </TabItem>
+</Tabs>
+
+```json title="Response: 202 Accepted"
+{
+  "id": "msg_9Hc2Lr7Qx",
+  "to": "+15550100",
+  "body": "Your order #1042 is on its way.",
+  "status": "queued",
+  "parts": 1,
+  "send_at": null,
+  "metadata": { "order_id": "1042" },
+  "created_at": "2026-11-02T16:04:09Z"
+}
+```
+
+---
+
+## Retrieve a message
+
+<div class="endpoint"><span class="method get">GET</span>/v1/messages/&#123;id&#125;</div>
+
+Returns a message by its ID.
+
+<Tabs syncKey="lang">
+  <TabItem label="cURL">
+    ```bash
+    curl https://api.tidewire.example/v1/messages/msg_9Hc2Lr7Qx \
+      -H "Authorization: Bearer $TIDEWIRE_API_KEY"
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```js
+    const message = await tw.messages.retrieve("msg_9Hc2Lr7Qx");
+    ```
+  </TabItem>
+  <TabItem label="Python">
+    ```python
+    message = tw.messages.retrieve("msg_9Hc2Lr7Qx")
+    ```
+  </TabItem>
+  <TabItem label="Go">
+    ```go
+    msg, err := client.Messages.Get(ctx, "msg_9Hc2Lr7Qx")
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## List messages
+
+<div class="endpoint"><span class="method get">GET</span>/v1/messages</div>
+
+Returns messages, newest first.
+
+### Query parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `status` | string | Only return messages with this status |
+| `to` | string | Only return messages sent to this number |
+| `limit` | integer | 1 to 100, default 25 |
+| `cursor` | string | The `next_cursor` from the previous page |
+
+<Tabs syncKey="lang">
+  <TabItem label="cURL">
+    ```bash
+    curl "https://api.tidewire.example/v1/messages?status=failed&limit=10" \
+      -H "Authorization: Bearer $TIDEWIRE_API_KEY"
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```js
+    for await (const message of tw.messages.list({ status: "failed" })) {
+      console.log(message.id, message.status);
+    }
+    ```
+  </TabItem>
+  <TabItem label="Python">
+    ```python
+    for message in tw.messages.list(status="failed").auto_paging_iter():
+        print(message.id, message.status)
+    ```
+  </TabItem>
+  <TabItem label="Go">
+    ```go
+    iter := client.Messages.List(ctx, &tidewire.ListParams{Status: "failed"})
+    for iter.Next() {
+        fmt.Println(iter.Message().ID)
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Cancel a scheduled message <Badge text="Scheduled only" variant="caution" />
+
+<div class="endpoint"><span class="method delete">DELETE</span>/v1/messages/&#123;id&#125;</div>
+
+Cancels a message that hasn't been sent yet. Returns the message with `status` set to `canceled`.
+
+<Aside type="caution">
+  You can cancel until one minute before `send_at`. After that, the request returns `409` with the code `too_late_to_cancel`.
+</Aside>
+
+<Tabs syncKey="lang">
+  <TabItem label="cURL">
+    ```bash
+    curl -X DELETE https://api.tidewire.example/v1/messages/msg_9Hc2Lr7Qx \
+      -H "Authorization: Bearer $TIDEWIRE_API_KEY"
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```js
+    await tw.messages.cancel("msg_9Hc2Lr7Qx");
+    ```
+  </TabItem>
+  <TabItem label="Python">
+    ```python
+    tw.messages.cancel("msg_9Hc2Lr7Qx")
+    ```
+  </TabItem>
+  <TabItem label="Go">
+    ```go
+    _, err := client.Messages.Cancel(ctx, "msg_9Hc2Lr7Qx")
+    ```
+  </TabItem>
+</Tabs>

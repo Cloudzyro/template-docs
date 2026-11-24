@@ -1,0 +1,46 @@
+---
+title: Tidewire Docs
+description: Send text messages, manage contacts and receive delivery webhooks with the Tidewire API.
+template: splash
+hero:
+  title: Messaging that just arrives.
+  tagline: Everything you need to send messages, manage contacts and react to delivery events with the Tidewire API, from your first request to production.
+  image:
+    file: ../../assets/hero.svg
+    alt: A code card sending a POST request to the messages endpoint, answered with 202 Accepted, above two flowing wave lines.
+  actions:
+    - text: Get started
+      link: /getting-started/quickstart/
+    - text: API reference
+      link: /api/overview/
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+## Start here
+
+<CardGrid>
+  <Card title="Quickstart" icon="rocket">
+    Create a key, install a library and send your first message in about five minutes.
+    [Open the quickstart](/getting-started/quickstart/)
+  </Card>
+  <Card title="Authentication" icon="seti:lock">
+    API keys, test and live modes, and how to keep secrets out of your code.
+    [Learn about keys](/getting-started/authentication/)
+  </Card>
+  <Card title="Webhooks" icon="random">
+    Get told the moment a message is delivered, read or fails, and verify every request.
+    [Set up webhooks](/guides/webhooks/)
+  </Card>
+  <Card title="API reference" icon="open-book">
+    Every endpoint with parameters, responses and samples in cURL, JavaScript, Python and Go.
+    [Browse endpoints](/api/messages/)
+  </Card>
+</CardGrid>
+
+## Popular guides
+
+<LinkCard title="Sending messages" description="Templates, scheduling and per-country rules." href="/guides/sending-messages/" />
+<LinkCard title="Errors and rate limits" description="What each status code means and how to retry safely." href="/api/overview/" />
+<LinkCard title="API versioning" description="How dated versions work and how to upgrade without surprises." href="/resources/versioning/" />
