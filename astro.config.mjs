@@ -24,7 +24,13 @@ export default defineConfig({
       ],
       expressiveCode: {
         themes: ["github-dark-default", "github-light"],
-        styleOverrides: { borderRadius: "0.75rem", codeFontFamily: "'JetBrains Mono Variable', ui-monospace, monospace" },
+        // Plain code frames: no fake window dots, no drop shadow. Titled blocks still show their file name.
+        defaultProps: { frame: "code" },
+        styleOverrides: {
+          borderRadius: "0.75rem",
+          codeFontFamily: "'JetBrains Mono Variable', ui-monospace, monospace",
+          frames: { shadowColor: "transparent" },
+        },
       },
       sidebar: [
         { label: "Getting started", items: [{ autogenerate: { directory: "getting-started" } }] },

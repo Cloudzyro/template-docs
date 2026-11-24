@@ -17,7 +17,7 @@ A fast, static docs site for APIs and developer products, built with Astro Starl
 - Versioning page, an API version badge in the sidebar and a version banner on reference pages
 - `llms.txt` at the site root, generated from your pages at build
 - Sitemap, `robots.txt`, Open Graph tags and a custom 404 page
-- Custom theme (deep sea ink, aqua and coral) for dark and light mode, with Space Grotesk, Inter and JetBrains Mono self-hosted
+- Custom theme (deep sea ink with one aqua accent) for dark and light mode, with Space Grotesk, Inter and JetBrains Mono self-hosted
 - Fully static output (`dist/`), so it runs on any static host
 
 ## Run it locally
